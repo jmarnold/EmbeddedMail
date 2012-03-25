@@ -1,11 +1,23 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedMail", "EmbeddedMail\EmbeddedMail.csproj", "{63FEC2DC-0739-42EF-B73C-EC9F8FF19573}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedMail.Tests", "EmbeddedMail.Tests\EmbeddedMail.Tests.csproj", "{AA9B50AA-275C-4108-9B53-0A5947C553DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63FEC2DC-0739-42EF-B73C-EC9F8FF19573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63FEC2DC-0739-42EF-B73C-EC9F8FF19573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63FEC2DC-0739-42EF-B73C-EC9F8FF19573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63FEC2DC-0739-42EF-B73C-EC9F8FF19573}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA9B50AA-275C-4108-9B53-0A5947C553DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA9B50AA-275C-4108-9B53-0A5947C553DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA9B50AA-275C-4108-9B53-0A5947C553DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA9B50AA-275C-4108-9B53-0A5947C553DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
