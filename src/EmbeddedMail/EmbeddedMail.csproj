@@ -44,10 +44,13 @@
     <Compile Include="Handlers\DataHandler.cs" />
     <Compile Include="Handlers\HeloHandler.cs" />
     <Compile Include="Handlers\ISmtpProtocolHandler.cs" />
+    <Compile Include="Handlers\MessageParser.cs" />
     <Compile Include="Handlers\MessageParsingHandler.cs" />
     <Compile Include="Handlers\ProtocolHandlers.cs" />
     <Compile Include="Handlers\QuitHandler.cs" />
     <Compile Include="Handlers\RegisterAddressesHandler.cs" />
+    <Compile Include="Handlers\SmtpMessage.cs" />
+    <Compile Include="Handlers\SmtpMessagePart.cs" />
     <Compile Include="Handlers\StringExtensions.cs" />
     <Compile Include="EmbeddedSmtpServer.cs" />
     <Compile Include="ISmtpSession.cs" />

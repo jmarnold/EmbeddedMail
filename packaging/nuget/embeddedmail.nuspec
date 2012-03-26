@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>FubuMVC.Spark</id>
+    <version>0.0.0</version>
+    <authors>Joshua Arnold</authors>
+    <owners>Joshua Arnold, Jeremy Miller</owners>
+    <licenseUrl>https://github.com/jmarnold/EmbeddedMail/blob/master/src/license.txt</licenseUrl>
+    <projectUrl>http://mvc.fubu-project.org/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Integration testing against e-mail almost always sucks. EmbeddedMail doesn't remove all of that pain, but it certainly helps it suck less. It's just a simple class library with 0 dependencies.</description>
+    <tags>testing unittest smtp mail memory</tags>
+  </metadata>
+  <files>
+    <file src="..\..\src\EmbeddedMail\bin\release\EmbeddedMail.*" target="lib\net40" />
+  </files>
+</package>

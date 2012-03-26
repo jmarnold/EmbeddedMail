@@ -40,55 +40,12 @@ namespace EmbeddedMail.Handlers
 
         public MailMessage CreateMessage(StringBuilder builder, ISmtpSession session)
         {
-            var message = new MailMessage();
-            var addresses = new List<string>();
-            var lines = builder.ToString().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None);
-
-            lines.Each(line =>
-            {
-                if(line.StartsWith("From"))
-                {
-                    message.From = new MailAddress(StringExtensions.ValueFromAttributeSyntax(line));
-                }
-
-                if(line.StartsWith("To"))
-                {
-                    StringExtensions.ValueFromAttributeSyntax(line)
-                        .Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                        .Each(x =>
-                        {
-                            message.To.Add(x);
-                            addresses.Add(x);
-                        });
-                }
-
-                if(line.StartsWith("Cc"))
-                {
-                    StringExtensions.ValueFromAttributeSyntax(line)
-                        .Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                        .Each(x =>
-                        {
-                            message.CC.Add(x);
-                            addresses.Add(x);
-                        });
-                }
-
-                if(line.StartsWith("Subject"))
-                {
-                    message.Subject = StringExtensions.ValueFromAttributeSyntax(line);
-                }
-            });
-
-            var messageParts = builder.ToString().Split(new[] { Environment.NewLine + Environment.NewLine }, StringSplitOptions.None);
-            if(messageParts.Length > 2)
-            {
-                message.Body = messageParts[1];
-            }
+            var message = new MessageParser().Parse(builder.ToString());
 
             // Any recipients that are registered but haven't been used are blind copies
             session
                 .Recipients
-                .Where(x => !addresses.Contains(x))
+                .Where(x => !message.To.Any(y => y.Address == x) && !message.CC.Any(y => y.Address == x))
                 .Each(x => message.Bcc.Add(x));
 
 

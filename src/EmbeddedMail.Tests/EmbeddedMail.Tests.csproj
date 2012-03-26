@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Handlers\DataHandlerTester.cs" />
     <Compile Include="Handlers\HeloHandlerTester.cs" />
+    <Compile Include="Handlers\when_parsing_a_simple_text_email.cs" />
     <Compile Include="Handlers\MessageParsingHandlerTester.cs" />
     <Compile Include="Handlers\QuitHandlerTester.cs" />
     <Compile Include="Handlers\RegisterAddressesHandlerTester.cs" />
@@ -89,6 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attachment1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Attachment2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

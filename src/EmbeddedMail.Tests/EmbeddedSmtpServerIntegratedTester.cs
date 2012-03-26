@@ -21,12 +21,12 @@ namespace EmbeddedMail.Tests
             theMessage.Bcc.Add("blind@domain.com");
             theServer.Start();
 
-            SmtpLog.Level = LogLevel.Debug;
-            using (var client = new SmtpClient("localhost", 8181))
+            using (var client = new SmtpClient("localhost", port))
             {
                 client.Send(theMessage);
 
                 theMessage.Attachments.Add(new Attachment("Attachment1.txt"));
+                theMessage.Attachments.Add(new Attachment("Attachment2.txt"));
                 client.Send(theMessage);
             }
 
@@ -59,7 +59,7 @@ namespace EmbeddedMail.Tests
                 .ReceivedMessages()
                 .Last()
                 .Attachments
-                .ShouldHaveCount(1);
+                .ShouldHaveCount(2);
         }
     }
 }
