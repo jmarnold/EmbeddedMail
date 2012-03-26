@@ -9,7 +9,7 @@
     <projectUrl>http://mvc.fubu-project.org/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Integration testing against e-mail almost always sucks. EmbeddedMail doesn't remove all of that pain, but it certainly helps it suck less.</description>
-    <tags>testing unittest smtp mail memory</tags>
+    <tags>testing unittest smtp mail memory email fake</tags>
   </metadata>
   <files>
     <file src="..\..\src\EmbeddedMail\bin\release\EmbeddedMail.*" target="lib\net40" />
