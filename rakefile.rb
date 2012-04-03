@@ -18,7 +18,8 @@ buildsupportfiles.each { |ext| load ext }
 tc_build_number = ENV["BUILD_NUMBER"]
 build_revision = tc_build_number || Time.new.strftime('5%H%M')
 build_number = "#{BUILD_VERSION}.#{build_revision}"
-BUILD_NUMBER = build_number 
+BUILD_NUMBER = build_number
+ARTIFACTS = File.expand_path("artifacts")
 
 
 props = { :stage => File.expand_path("build"), :artifacts => File.expand_path("artifacts") }
@@ -72,7 +73,7 @@ def waitfor(&block)
 end
 
 desc "Compiles the app"
-msbuild :compile => [:restore_if_missing, :version] do |msb|
+msbuild :compile => [:clean, :restore_if_missing, :version] do |msb|
 	msb.command = File.join(ENV['windir'], 'Microsoft.NET', 'Framework', CLR_TOOLS_VERSION, 'MSBuild.exe')
 	msb.properties :configuration => COMPILE_TARGET
 	msb.solution = "src/EmbeddedMail.sln"
