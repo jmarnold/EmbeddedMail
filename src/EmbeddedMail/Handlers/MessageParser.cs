@@ -31,8 +31,11 @@ namespace EmbeddedMail.Handlers
              var recipients = result.Headers["To"].Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
              recipients.Each(r => message.To.Add(new MailAddress(r)));
 
-             var copies = result.Headers["Cc"].Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-             copies.Each(r => message.CC.Add(new MailAddress(r)));
+             if(result.Headers.ContainsKey("Cc"))
+             {
+                 var copies = result.Headers["Cc"].Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                 copies.Each(r => message.CC.Add(new MailAddress(r)));
+             }
 
              var attachments = parts.Skip(1).ToArray();
              attachments.Each(x =>
