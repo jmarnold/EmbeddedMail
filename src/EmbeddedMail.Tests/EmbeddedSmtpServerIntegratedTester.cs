@@ -17,7 +17,7 @@ namespace EmbeddedMail.Tests
             var port = PortFinder.FindPort(8181);
             theServer = new EmbeddedSmtpServer(port);
             theMessage = new MailMessage("x@domain.com", "y@domain.com", "Hello there", "O hai");
-            theMessage.CC.Add("copy@domain.com");
+            //theMessage.CC.Add("copy@domain.com");
             theMessage.Bcc.Add("blind@domain.com");
             theServer.Start();
 
@@ -42,7 +42,7 @@ namespace EmbeddedMail.Tests
             message.Subject.ShouldEqual(theMessage.Subject);
             message.Body.ShouldEqual(theMessage.Body);
 
-            message.CC.Single().ShouldEqual(theMessage.CC.Single());
+            //message.CC.Single().ShouldEqual(theMessage.CC.Single());
             message.Bcc.Single().ShouldEqual(theMessage.Bcc.Single());
         }
 
