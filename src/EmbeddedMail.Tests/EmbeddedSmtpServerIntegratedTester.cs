@@ -18,7 +18,7 @@ namespace EmbeddedMail.Tests
         {
             var port = PortFinder.FindPort(8181);
             theServer = new EmbeddedSmtpServer(port);
-            theMessage = new MailMessage("x@domain.com", "y@domain.com", "Hello there", "O hai");
+            theMessage = new MailMessage("x@domain.com", "y@domain.com", "Hello there", "O hai, here is a url for you: http://localhost/something/something/else/is/cool");
             theMessage.CC.Add(ccAddress);
             theMessage.Bcc.Add(bccAddress);
             theServer.Start();

@@ -23,7 +23,7 @@ namespace EmbeddedMail.Handlers
              var body = parts.First();
              var message = new MailMessage
                                {
-                                   Body = body.BodyData,
+                                   Body = body.BodyData.Replace("=\r\n", string.Empty), // holy crap this is dumb
                                    Subject = result.Headers["Subject"],
                                    From = new MailAddress(result.Headers["From"])
                                };
