@@ -6,7 +6,7 @@
     <authors>Joshua Arnold</authors>
     <owners>Joshua Arnold, Jeremy Miller</owners>
     <licenseUrl>https://github.com/jmarnold/EmbeddedMail/blob/master/src/license.txt</licenseUrl>
-    <projectUrl>https://github.com/jmarnold/EmbeddedMail</projectUrl>
+    <projectUrl>http://jmarnold.github.com/EmbeddedMail</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Integration testing against e-mail almost always sucks. EmbeddedMail doesn't remove all of that pain, but it certainly helps it suck less by providing an in-memory SMTP server that you can assert on.</description>
     <tags>testing unittest smtp mail memory email fake</tags>
