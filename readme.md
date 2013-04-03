@@ -8,7 +8,7 @@ Integration testing against e-mail almost always sucks. EmbeddedMail doesn't rem
 
 Here's some simple example code:
 
-	var server = new EmeddedSmtpServer(8181);
+	var server = new EmbeddedSmtpServer(8181);
 	server.Start();
 	
 	var message = new MailMessage("x@domain.com", "y@domain.com", "Hello there", "O hai");
