@@ -65,7 +65,11 @@ namespace EmbeddedMail
         public void ListenForClients()
         {
             if (_closed) return;
-            ListenForClients(OnClientConnect, e => SmtpLog.Error("Listener socket is closed", e));
+            ListenForClients(OnClientConnect, e =>
+            {
+                if (e is ObjectDisposedException) return;
+                SmtpLog.Error("Listener socket is closed", e);
+            });
         }
 
         public Task<ISocket> ListenForClients(Action<ISocket> callback, Action<Exception> error)
