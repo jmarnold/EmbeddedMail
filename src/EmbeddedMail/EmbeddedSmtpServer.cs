@@ -65,27 +65,49 @@ namespace EmbeddedMail
         public void ListenForClients()
         {
             if (_closed) return;
-            ListenForClients(OnClientConnect, e =>
-            {
-                if (e is ObjectDisposedException) return;
-                SmtpLog.Error("Listener socket is closed", e);
-            });
+            ListenForClients(OnClientConnect, handleException);
         }
 
-        public Task<ISocket> ListenForClients(Action<ISocket> callback, Action<Exception> error)
+        private void handleException(Exception exc)
         {
-            Func<IAsyncResult, ISocket> end = r => new SocketWrapper(Listener.EndAcceptSocket(r));
+            if (exc is AggregateException)
+            {
+                var inner = exc.InnerException;
+                if(inner != null) handleException(exc);
+                return;
+            }
 
-            var task = Task.Factory.FromAsync(Listener.BeginAcceptSocket, end, null);
+            if (exc is ObjectDisposedException) return;
+
+            SmtpLog.Error("Listener socket is closed", exc);
+        }
+
+        public Task ListenForClients(Action<ISocket> callback, Action<Exception> error)
+        {
+            try
+            {
+                Func<IAsyncResult, ISocket> end = r => new SocketWrapper(Listener.EndAcceptSocket(r));
+
+                var task = Task.Factory.FromAsync(Listener.BeginAcceptSocket, end, null);
+
+                task.ContinueWith(t => callback(t.Result), TaskContinuationOptions.NotOnFaulted)
+                    .ContinueWith(t => error(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
+
+                return task;
+
+            }
+            catch(Exception e)
+            {
+                error(e);
+                return Task.Factory.StartNew(() => { });
+            }
             
-            task.ContinueWith(t => callback(t.Result), TaskContinuationOptions.NotOnFaulted)
-                .ContinueWith(t => error(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
-            
-            return task;
         }
 
         public void OnClientConnect(ISocket clientSocket)
         {
+            if (_closed) return;
+
             SmtpLog.Info("Client connected");
             ListenForClients();
 
