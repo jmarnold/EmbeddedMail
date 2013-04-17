@@ -16,14 +16,13 @@ namespace EmbeddedMail.Tests
         [TestFixtureSetUp]
         public void BeforeAll()
         {
-            var port = PortFinder.FindPort(8181);
-            theServer = new EmbeddedSmtpServer(port);
+            theServer = EmbeddedSmtpServer.Local(8181);
             theMessage = new MailMessage("x@domain.com", "y@domain.com", "Hello there", "O hai, here is a url for you: http://localhost/something/something/else/is/cool");
             theMessage.CC.Add(ccAddress);
             theMessage.Bcc.Add(bccAddress);
             theServer.Start();
 
-            using (var client = new SmtpClient("localhost", port))
+            using (var client = new SmtpClient("localhost", theServer.Port))
             {
                 client.Send(theMessage);
 
@@ -36,6 +35,12 @@ namespace EmbeddedMail.Tests
             }
 
             theServer.Stop();
+        }
+
+        [TestFixtureTearDown]
+        public void TestFixtureTearDown()
+        {
+            theServer.Dispose();
         }
 
         [Test]

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EmbeddedMail
@@ -17,7 +19,9 @@ namespace EmbeddedMail
     public class EmbeddedSmtpServer : ISmtpServer
     {
         private readonly IList<MailMessage> _messages = new List<MailMessage>();
+        private readonly IList<ISmtpSession> _sessions = new List<ISmtpSession>(); 
         private bool _closed;
+
         public EmbeddedSmtpServer(int port = 25)
             : this(IPAddress.Any, port)
         {
@@ -47,6 +51,12 @@ namespace EmbeddedMail
             ListenForClients();
         }
 
+        public void WaitForMessages(int timeoutInMilliseconds = 5000)
+        {
+            var count = _messages.Count;
+            Wait.Until(() => _messages.Count > count, timeoutInMilliseconds: timeoutInMilliseconds);
+        }
+
         public void Stop()
         {
             _closed = true;
@@ -61,10 +71,12 @@ namespace EmbeddedMail
         public Task<ISocket> ListenForClients(Action<ISocket> callback, Action<Exception> error)
         {
             Func<IAsyncResult, ISocket> end = r => new SocketWrapper(Listener.EndAcceptSocket(r));
+
             var task = Task.Factory.FromAsync(Listener.BeginAcceptSocket, end, null);
+            
             task.ContinueWith(t => callback(t.Result), TaskContinuationOptions.NotOnFaulted)
                 .ContinueWith(t => error(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
-            task.ContinueWith(t => error(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
+            
             return task;
         }
 
@@ -78,6 +90,8 @@ namespace EmbeddedMail
                 OnMessage = (msg) => _messages.Add(msg)
             };
             session.Start();
+
+            _sessions.Add(session);
         }
 
         public void Dispose()
@@ -85,6 +99,39 @@ namespace EmbeddedMail
             Stop();
             // I don't grok the disposal lifecycle for the sockets yet
             Listener.Stop();
+
+            _sessions.Each(x => x.Dispose());
+        }
+
+        /// <summary>
+        /// Creates a new instance fot the <see cref="EmbeddedSmtpServer"/> class
+        /// by finding the first open port starting at the specified port.
+        /// </summary>
+        /// <param name="startingPort">The port to start scanning from (default 25)</param>
+        /// <returns></returns>
+        public static EmbeddedSmtpServer Local(int startingPort = 8080)
+        {
+            var port = PortFinder.FindPort(startingPort);
+            return new EmbeddedSmtpServer(port);
+        }
+    }
+
+    public static class Wait
+    {
+        public static void Until(Func<bool> condition, int millisecondPolling = 500, int timeoutInMilliseconds = 5000)
+        {
+            if (condition()) return;
+
+            var clock = new Stopwatch();
+            clock.Start();
+
+            while (clock.ElapsedMilliseconds < timeoutInMilliseconds)
+            {
+                Thread.Yield();
+                Thread.Sleep(500);
+
+                if (condition()) return;
+            }
         }
     }
 }

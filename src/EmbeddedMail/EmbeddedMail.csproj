@@ -55,6 +55,7 @@
     <Compile Include="EmbeddedSmtpServer.cs" />
     <Compile Include="ISmtpSession.cs" />
     <Compile Include="ISocket.cs" />
+    <Compile Include="PortFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmtpLog.cs" />
     <Compile Include="SmtpToken.cs" />

@@ -59,6 +59,8 @@ namespace EmbeddedMail
 
         public void Dispose()
         {
+            WriteResponse("421 localhost Closing transmission channel");
+
             _writer.Close();
             _reader.Close();
         }

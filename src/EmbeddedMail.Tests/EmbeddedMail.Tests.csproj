@@ -74,7 +74,7 @@
     <Compile Include="Handlers\QuitHandlerTester.cs" />
     <Compile Include="Handlers\RegisterAddressesHandlerTester.cs" />
     <Compile Include="EmbeddedSmtpServerIntegratedTester.cs" />
-    <Compile Include="PortFinder.cs" />
+    <Compile Include="IntegratedSingleMessageTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmtpTokenTester.cs" />
     <Compile Include="StubSmtpSession.cs" />
@@ -84,9 +84,6 @@
       <Project>{63FEC2DC-0739-42EF-B73C-EC9F8FF19573}</Project>
       <Name>EmbeddedMail</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attachment1.txt">
