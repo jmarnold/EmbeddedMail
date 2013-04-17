@@ -1,4 +1,18 @@
-COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
+COMPILE_TARGET = ENV['config'].nil? ? "Debug" : ENV['config']
+CLR_TOOLS_VERSION = "v4.0.30319"
+
+buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
+
+if( ! buildsupportfiles.any? )
+  # no buildsupport, let's go get it for them.
+  sh 'git submodule update --init' unless buildsupportfiles.any?
+  buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
+end
+
+# nope, we still don't have buildsupport. Something went wrong.
+raise "Run `git submodule update --init` to populate your buildsupport folder." unless buildsupportfiles.any?
+
+buildsupportfiles.each { |ext| load ext }
 
 include FileTest
 require 'albacore'
@@ -6,14 +20,9 @@ load "VERSION.txt"
 
 RESULTS_DIR = "results"
 PRODUCT = "EmbeddedMail"
-COPYRIGHT = 'Copyright 2011 EmbeddedMail. All rights reserved.';
+COPYRIGHT = 'Copyright 2011-2013 Joshua Arnold. All rights reserved.';
 COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';
 CLR_TOOLS_VERSION = "v4.0.30319"
-
-buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
-raise "Run `git submodule update --init` to populate your buildsupport folder." unless buildsupportfiles.any?
-buildsupportfiles.each { |ext| load ext }
-
 
 tc_build_number = ENV["BUILD_NUMBER"]
 build_revision = tc_build_number || Time.new.strftime('5%H%M')
@@ -28,7 +37,7 @@ desc "**Default**, compiles and runs tests"
 task :default => [:compile, :unit_test]
 
 desc "Target used for the CI server"
-task :ci => [:update_all_dependencies, :default, :history, :publish]
+task :ci => [:default, :history, :package]
 
 desc "Prepares the working directory for a new build"
 task :clean do
