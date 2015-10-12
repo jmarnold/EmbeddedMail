@@ -1,7 +1,7 @@
 ﻿using EmbeddedMail.Handlers;
-using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 
 namespace EmbeddedMail.Tests.Handlers
 {
@@ -44,7 +44,7 @@ namespace EmbeddedMail.Tests.Handlers
         [Test]
         public void should_not_continue()
         {
-            theHandler.Handle(theToken, theSession).ShouldEqual(ContinueProcessing.Stop);
+            theHandler.Handle(theToken, theSession).ShouldBe(ContinueProcessing.Stop);
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using EmbeddedMail.Handlers;
-using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Shouldly;
 
 namespace EmbeddedMail.Tests.Handlers
 {
@@ -64,7 +64,8 @@ namespace EmbeddedMail.Tests.Handlers
             theMessageBody
                 .ToString()
                 .Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                .Each(line =>
+				.ToList()
+                .ForEach(line =>
                 {
                     if (line.Trim() == ".") return;
 
@@ -85,7 +86,7 @@ namespace EmbeddedMail.Tests.Handlers
             theRecipients.Add("blind@domain.com");
             theMessage = theHandler.CreateMessage(theMessageBody, theSession);
 
-            theMessage.Bcc.Single().Address.ShouldEqual("blind@domain.com");
+            theMessage.Bcc.Single().Address.ShouldBe("blind@domain.com");
         }
     }
 }

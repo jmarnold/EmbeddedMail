@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net.Mail;
-using FubuTestingSupport;
 using NUnit.Framework;
+using Shouldly;
 
 namespace EmbeddedMail.Tests
 {
@@ -47,19 +47,19 @@ namespace EmbeddedMail.Tests
         public void receives_the_message()
         {
             var message = theServer.ReceivedMessages().First();
-            message.From.ShouldEqual(theMessage.From);
-            message.To.First().ShouldEqual(theMessage.To.First());
-            message.Subject.ShouldEqual(theMessage.Subject);
-            message.Body.ShouldEqual(theMessage.Body);
+            message.From.ShouldBe(theMessage.From);
+            message.To.First().ShouldBe(theMessage.To.First());
+            message.Subject.ShouldBe(theMessage.Subject);
+            message.Body.ShouldBe(theMessage.Body);
 
-            message.CC.Single().Address.ShouldEqual(ccAddress);
-            message.Bcc.Single().Address.ShouldEqual(bccAddress);
+            message.CC.Single().Address.ShouldBe(ccAddress);
+            message.Bcc.Single().Address.ShouldBe(bccAddress);
         }
 
         [Test]
         public void receives_multiple_messages()
         {
-            theServer.ReceivedMessages().ShouldHaveCount(3);
+            theServer.ReceivedMessages().Count().ShouldBe(3);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace EmbeddedMail.Tests
         {
             var message = theServer.ReceivedMessages().Skip(1).First();
 
-            message.CC.Count.ShouldEqual(0);
+			message.CC.Count.ShouldBe(0);
         }
 
         [Test]
@@ -77,7 +77,8 @@ namespace EmbeddedMail.Tests
                 .ReceivedMessages()
                 .Last()
                 .Attachments
-                .ShouldHaveCount(2);
+				.Count
+                .ShouldBe(2);
         }
     }
 }

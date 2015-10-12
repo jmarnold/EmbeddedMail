@@ -1,0 +1,9 @@
+﻿type project
+id EmbeddedMail
+authors Joshua Arnold
+description
+    EmbeddedMail is a simple in-memory SMTP Server for .NET.
+files
+    bin/Release/EmbeddedMail.* ==> lib/net40
+licenseUrl https://github.com/jmarnold/EmbeddedMail/raw/master/LICENSE.TXT
+projectUrl http://jmarnold.github.io/EmbeddedMail

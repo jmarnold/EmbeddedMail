@@ -1,0 +1,5 @@
+source http://nuget.org/api/v2
+
+nuget Fixie
+nuget RhinoMocks 3.6.1
+nuget Shouldly

@@ -1,0 +1,6 @@
+NUGET
+  remote: http://nuget.org/api/v2
+  specs:
+    Fixie (1.0.0.29)
+    RhinoMocks (3.6.1)
+    Shouldly (2.6.0)

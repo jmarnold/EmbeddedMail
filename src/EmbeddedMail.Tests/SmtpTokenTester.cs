@@ -1,6 +1,6 @@
 using System;
-using FubuTestingSupport;
 using NUnit.Framework;
+using Shouldly;
 
 namespace EmbeddedMail.Tests
 {
@@ -10,12 +10,12 @@ namespace EmbeddedMail.Tests
         [Test]
         public void should_parse_known_commands()
         {
-            verifyToken("HELO localhost", token => token.Command.ShouldEqual("HELO"));
-            verifyToken("EHLO localhost", token => token.Command.ShouldEqual("EHLO"));
-            verifyToken("MAIL FROM: jmarnold@home.net", token => token.Command.ShouldEqual("MAIL FROM"));
-            verifyToken("RCPT TO: you@there.com", token => token.Command.ShouldEqual("RCPT TO"));
-            verifyToken("DATA", token => token.Command.ShouldEqual("DATA"));
-            verifyToken("Subject: Test message", token => token.Command.ShouldEqual("DATA"));
+            verifyToken("HELO localhost", token => token.Command.ShouldBe("HELO"));
+            verifyToken("EHLO localhost", token => token.Command.ShouldBe("EHLO"));
+            verifyToken("MAIL FROM: jmarnold@home.net", token => token.Command.ShouldBe("MAIL FROM"));
+            verifyToken("RCPT TO: you@there.com", token => token.Command.ShouldBe("RCPT TO"));
+            verifyToken("DATA", token => token.Command.ShouldBe("DATA"));
+            verifyToken("Subject: Test message", token => token.Command.ShouldBe("DATA"));
         }
 
         private void verifyToken(string input, Action<SmtpToken> action)

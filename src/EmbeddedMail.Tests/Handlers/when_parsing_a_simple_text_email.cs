@@ -2,8 +2,8 @@
 using System.Net.Mail;
 using System.Text;
 using EmbeddedMail.Handlers;
-using FubuTestingSupport;
 using NUnit.Framework;
+using Shouldly;
 
 namespace EmbeddedMail.Tests.Handlers
 {
@@ -36,37 +36,37 @@ namespace EmbeddedMail.Tests.Handlers
         [Test]
         public void parses_the_sender()
         {
-            theMessage.From.Address.ShouldEqual("x@domain.com");
+            theMessage.From.Address.ShouldBe("x@domain.com");
         }
 
         [Test]
         public void parses_a_single_recipient()
         {
-            theMessage.To.First().Address.ShouldEqual("y@domain.com");
+            theMessage.To.First().Address.ShouldBe("y@domain.com");
         }
 
         [Test]
         public void parses_multiple_recipients()
         {
-            theMessage.To.Last().Address.ShouldEqual("z@domain.com");
+            theMessage.To.Last().Address.ShouldBe("z@domain.com");
         }
 
         [Test]
         public void parses_the_subject()
         {
-            theMessage.Subject.ShouldEqual("This is a test");
+            theMessage.Subject.ShouldBe("This is a test");
         }
 
         [Test]
         public void parses_the_body()
         {
-            theMessage.Body.ShouldEqual("This is the body");
+            theMessage.Body.ShouldBe("This is the body");
         }
 
         [Test]
         public void parses_copies()
         {
-            theMessage.CC.Single().Address.ShouldEqual("copy@domain.com");
+            theMessage.CC.Single().Address.ShouldBe("copy@domain.com");
         }
     }
 }

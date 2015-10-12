@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net.Mail;
-using FubuTestingSupport;
 using NUnit.Framework;
+using Shouldly;
 
 namespace EmbeddedMail.Tests
 {
@@ -42,13 +42,13 @@ namespace EmbeddedMail.Tests
         public void receives_the_message()
         {
             var message = theServer.ReceivedMessages().First();
-            message.From.ShouldEqual(theMessage.From);
-            message.To.First().ShouldEqual(theMessage.To.First());
-            message.Subject.ShouldEqual(theMessage.Subject);
-            message.Body.ShouldEqual(theMessage.Body);
+            message.From.ShouldBe(theMessage.From);
+            message.To.First().ShouldBe(theMessage.To.First());
+            message.Subject.ShouldBe(theMessage.Subject);
+            message.Body.ShouldBe(theMessage.Body);
 
-            message.CC.Single().Address.ShouldEqual(ccAddress);
-            message.Bcc.Single().Address.ShouldEqual(bccAddress);
+            message.CC.Single().Address.ShouldBe(ccAddress);
+            message.Bcc.Single().Address.ShouldBe(bccAddress);
         }
     }
 }
