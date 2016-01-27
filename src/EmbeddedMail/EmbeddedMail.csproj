@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="Handlers\DataHandler.cs" />
+    <Compile Include="Handlers\AuthPlainHandler.cs" />
+    <Compile Include="Handlers\EhloHandler.cs" />
     <Compile Include="Handlers\HeloHandler.cs" />
     <Compile Include="Handlers\ISmtpProtocolHandler.cs" />
     <Compile Include="Handlers\MessageParser.cs" />

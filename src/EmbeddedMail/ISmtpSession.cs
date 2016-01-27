@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using EmbeddedMail.Handlers;
 
@@ -34,7 +35,7 @@ namespace EmbeddedMail {
       _reader = new StreamReader(_socket.Stream);
       _writer = new StreamWriter(_socket.Stream) { AutoFlush = true };
 
-      _writer.WriteLine("220 localhost Server Ready");
+      _writer.WriteLine(String.Format("220 {0}", Dns.GetHostName()));
       var isMessageBody = false;
       while (_socket.Connected) {
         SmtpToken token;
@@ -46,8 +47,11 @@ namespace EmbeddedMail {
 
         SmtpLog.Debug(token.Data);
         var handler = ProtocolHandlers.HandlerFor(token);
-        if (handler.Handle(token, this) == ContinueProcessing.Stop) {
+        var cp = handler.Handle(token, this);
+        if (cp == ContinueProcessing.Stop) {
           break;
+        } else if (cp == ContinueProcessing.ContinueAuth) {
+          new AuthPlainHandler().Handle(new SmtpToken() { Data = _reader.ReadLine() }, this);
         }
         isMessageBody = token.IsData && token.IsMessageBody;
       }
@@ -59,8 +63,7 @@ namespace EmbeddedMail {
     }
 
     public void Dispose() {
-      WriteResponse("421 localhost Closing transmission channel");
-
+      WriteResponse(String.Format("421 {0}", Dns.GetHostName()));
       _writer.Close();
       _reader.Close();
     }
