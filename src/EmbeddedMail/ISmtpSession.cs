@@ -45,7 +45,7 @@ namespace EmbeddedMail {
           break;
         }
 
-        SmtpLog.Debug(token.Data);
+        SmtpLog.Info(token.Data);
         var handler = ProtocolHandlers.HandlerFor(token);
         var cp = handler.Handle(token, this);
         if (cp == ContinueProcessing.Stop) {
