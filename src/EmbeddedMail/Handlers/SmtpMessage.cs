@@ -68,6 +68,9 @@ namespace EmbeddedMail.Handlers
 
         private IEnumerable<SmtpMessagePart> parseMessageParts(string message)
         {
+            foreach(var key in Headers.Keys) {
+               Console.WriteLine("DEBUG_PRINT Key '{0}' Value '{1}'", key, Headers[key]);
+            }
             string contentType = Headers["Content-Type"];
 
             // Check to see if it is a Multipart Messages
