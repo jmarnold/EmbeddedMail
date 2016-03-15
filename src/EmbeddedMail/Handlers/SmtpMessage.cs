@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Serilog;
 
 namespace EmbeddedMail.Handlers
 {
@@ -45,7 +46,7 @@ namespace EmbeddedMail.Handlers
         {
             IDictionary<string, string> headers = new Dictionary<string, string>();
 
-            string[] parts = Regex.Split(partData, DoubleNewline);
+            string[] parts = Regex.Split(partData, @MessageParser.Newline_XP + @MessageParser.Newline_XP);
             string headerString = parts[0] + DoubleNewline;
 
             var headerKeys = Regex.Matches(headerString, @"^(?<key>\S*):", RegexOptions.Multiline);
@@ -53,11 +54,11 @@ namespace EmbeddedMail.Handlers
             foreach (Match match in headerKeys)
             {
                 headerKey = match.Result("${key}");
-                Match valueMatch = Regex.Match(headerString, headerKey + @":(?<value>.*?)\r\n[\S\r]", RegexOptions.Singleline);
+                Match valueMatch = Regex.Match(headerString, headerKey + @":(?<value>.*?)" + @MessageParser.Newline_XP + @"[\S\r]", RegexOptions.Singleline);
                 if (valueMatch.Success)
                 {
                     var headerValue = valueMatch.Result("${value}").Trim();
-                    headerValue = Regex.Replace(headerValue, "\r\n", "");
+                    headerValue = Regex.Replace(headerValue, @MessageParser.Newline_XP, "");
                     headerValue = Regex.Replace(headerValue, @"\s+", " ");
                     headers[headerKey] = headerValue;
                 }
@@ -68,9 +69,8 @@ namespace EmbeddedMail.Handlers
 
         private IEnumerable<SmtpMessagePart> parseMessageParts(string message)
         {
-            foreach(var key in Headers.Keys) {
-               Console.WriteLine("DEBUG_PRINT Key '{0}' Value '{1}'", key, Headers[key]);
-            }
+            Headers.Keys.Each(k => Log.Debug("DEBUG_PRINT Key '{0}' Value '{1}'", k, Headers[k]));
+
             string contentType = Headers["Content-Type"];
 
             // Check to see if it is a Multipart Messages
@@ -84,7 +84,7 @@ namespace EmbeddedMail.Handlers
                     string boundry = boundryMatch.Result("${boundry}");
 
                     var messageParts = new List<SmtpMessagePart>();
-                    MatchCollection matches = Regex.Matches(message, "--" + boundry + ".*\r\n");
+                    MatchCollection matches = Regex.Matches(message, "--" + boundry + ".*" + MessageParser.Newline_XP);
 
                     int lastIndex = -1;
                     int currentIndex = -1;
