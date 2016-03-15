@@ -46,7 +46,7 @@ namespace EmbeddedMail.Handlers
         {
             IDictionary<string, string> headers = new Dictionary<string, string>();
 
-            string[] parts = Regex.Split(partData, @MessageParser.Newline_XP + @MessageParser.Newline_XP);
+            string[] parts = Regex.Split(partData, MessageParser.Newline_XP + MessageParser.Newline_XP);
             string headerString = parts[0] + DoubleNewline;
 
             var headerKeys = Regex.Matches(headerString, @"^(?<key>\S*):", RegexOptions.Multiline);
@@ -54,11 +54,11 @@ namespace EmbeddedMail.Handlers
             foreach (Match match in headerKeys)
             {
                 headerKey = match.Result("${key}");
-                Match valueMatch = Regex.Match(headerString, headerKey + @":(?<value>.*?)" + @MessageParser.Newline_XP + @"[\S\r]", RegexOptions.Singleline);
+                Match valueMatch = Regex.Match(headerString, headerKey + @":(?<value>.*?)" + MessageParser.Newline_XP + @"[\S\r]", RegexOptions.Singleline);
                 if (valueMatch.Success)
                 {
                     var headerValue = valueMatch.Result("${value}").Trim();
-                    headerValue = Regex.Replace(headerValue, @MessageParser.Newline_XP, "");
+                    headerValue = Regex.Replace(headerValue, MessageParser.Newline_XP, "");
                     headerValue = Regex.Replace(headerValue, @"\s+", " ");
                     headers[headerKey] = headerValue;
                 }

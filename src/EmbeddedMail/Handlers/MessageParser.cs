@@ -9,7 +9,7 @@ namespace EmbeddedMail.Handlers
 {
     public class MessageParser
     {
-    public static readonly string Newline_XP = "[\r\n]+";
+    public static readonly string Newline_XP = @"[\r\n]+";
          public MailMessage Parse(string data)
          {
              var result = new SmtpMessage(data);
