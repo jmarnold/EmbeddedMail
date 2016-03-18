@@ -31,7 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle">
+      <HintPath>..\..\..\..\packages\MimeKit.1.2.19\lib\net40\BouncyCastle.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MimeKit">
+      <HintPath>..\..\..\..\packages\MimeKit.1.2.19\lib\net40\MimeKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\Serilog.1.5.14\lib\net40\Serilog.dll</HintPath>
       <Private>True</Private>
@@ -44,6 +52,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -54,17 +63,15 @@
     <Compile Include="Handlers\EhloHandler.cs" />
     <Compile Include="Handlers\HeloHandler.cs" />
     <Compile Include="Handlers\ISmtpProtocolHandler.cs" />
-    <Compile Include="Handlers\MessageParser.cs" />
     <Compile Include="Handlers\MessageParsingHandler.cs" />
     <Compile Include="Handlers\ProtocolHandlers.cs" />
     <Compile Include="Handlers\QuitHandler.cs" />
     <Compile Include="Handlers\RegisterAddressesHandler.cs" />
-    <Compile Include="Handlers\SmtpMessage.cs" />
-    <Compile Include="Handlers\SmtpMessagePart.cs" />
     <Compile Include="Handlers\StringExtensions.cs" />
     <Compile Include="EmbeddedSmtpServer.cs" />
     <Compile Include="ISmtpSession.cs" />
     <Compile Include="ISocket.cs" />
+    <Compile Include="MimeKitExtensions.cs" />
     <Compile Include="PortFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmtpLog.cs" />
