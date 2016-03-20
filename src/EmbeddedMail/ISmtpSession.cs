@@ -45,7 +45,7 @@ namespace EmbeddedMail {
           break;
         }
 
-        SmtpLog.Info(token.Data);
+        if (!String.IsNullOrWhiteSpace(token.Data)) SmtpLog.Info(token.Data);
         var handler = ProtocolHandlers.HandlerFor(token);
         var cp = handler.Handle(token, this);
         if (cp == ContinueProcessing.Stop) {
