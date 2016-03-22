@@ -32,11 +32,17 @@ namespace EmbeddedMail {
     public void Start() {
       if (!_socket.Connected) return;
 
+      _socket.Stream.ReadTimeout = 10000;
+      _socket.Stream.WriteTimeout = 10000;
       _reader = new StreamReader(_socket.Stream);
-      _writer = new StreamWriter(_socket.Stream) { AutoFlush = true };
+      _writer = new StreamWriter(_socket.Stream) { AutoFlush = true, NewLine = "\r\n" };
 
-      _writer.WriteLine(String.Format("220 {0}", Dns.GetHostName()));
+      var greeting = String.Format("220 {0} ESMTP", _socket.LocalIpAddress);
+      _writer.WriteLine(greeting);
+      SmtpLog.Debug(greeting);
+
       var isMessageBody = false;
+      var dataReceived = false;
       while (_socket.Connected) {
         SmtpToken token;
         try {
@@ -45,7 +51,7 @@ namespace EmbeddedMail {
           break;
         }
 
-        if (!String.IsNullOrWhiteSpace(token.Data)) SmtpLog.Info(token.Data);
+        if (!String.IsNullOrWhiteSpace(token.Data)) SmtpLog.Info(token.Data ?? "");
         var handler = ProtocolHandlers.HandlerFor(token);
         var cp = handler.Handle(token, this);
         if (cp == ContinueProcessing.Stop) {
@@ -53,7 +59,13 @@ namespace EmbeddedMail {
         } else if (cp == ContinueProcessing.ContinueAuth) {
           new AuthPlainHandler().Handle(new SmtpToken() { Data = _reader.ReadLine() }, this);
         }
+
+        // detect if done with DATA command; set timeout = 5 seconds afterwards.
+        dataReceived = isMessageBody;
         isMessageBody = token.IsData && token.IsMessageBody;
+        if (dataReceived && !isMessageBody) {
+          _socket.Stream.ReadTimeout = 5000;
+        }
       }
 
       try {

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,7 +21,7 @@ namespace EmbeddedMail.Handlers {
       _messageGatherer.AppendLine(token.Data);
 
       if (token.Data != null && token.Data.Trim() == ".") {
-        session.WriteResponse(string.Format("250 Ok: queued as {0}", Guid.NewGuid()));
+        session.WriteResponse(string.Format("250 OK"));
         session.SaveMessage(CreateMessage(_messageGatherer, session));
         token.IsMessageBody = false;
       }

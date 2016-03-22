@@ -13,7 +13,7 @@ namespace EmbeddedMail
 
     public class SmtpLog
     {
-        public static LogLevel Level = LogLevel.Info;
+        public static LogLevel Level = LogLevel.Debug;
 
         public static Action<LogLevel, string, Exception> LogAction = (level, message, ex) =>
         {
