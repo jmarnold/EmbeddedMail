@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using NUnit.Framework;
 using Shouldly;
@@ -26,9 +28,16 @@ namespace EmbeddedMail.Tests
             theServer.Start();
 
             theClient = new SmtpClient("localhost", theServer.Port);
-            theClient.Send(theMessage);
+            theClient.UseDefaultCredentials = false;
+            theClient.Credentials = new NetworkCredential("x@domain.com", "1234567890");
 
-            theServer.WaitForMessages();
+            try {
+              theClient.Send(theMessage);
+            } catch (Exception ex) {
+              //Error, could not send the message
+            }
+
+      theServer.WaitForMessages();
         }
 
         [TestFixtureTearDown]
