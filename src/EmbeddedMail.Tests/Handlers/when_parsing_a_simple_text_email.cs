@@ -11,7 +11,7 @@ namespace EmbeddedMail.Tests.Handlers
     public class when_parsing_a_simple_text_email
     {
         private StringBuilder theMessageBody;
-        private MessageParser theParser;
+        //private MessageParser theParser;
         private MailMessage theMessage;
 
         [SetUp]
@@ -29,8 +29,8 @@ namespace EmbeddedMail.Tests.Handlers
             theMessageBody.AppendLine("This is the body");
             theMessageBody.AppendLine().AppendLine(".").AppendLine();
 
-            theParser = new MessageParser();
-            theMessage = theParser.Parse(theMessageBody.ToString());
+            //theParser = new MessageParser();
+            //theMessage = theParser.Parse(theMessageBody.ToString());
         }
 
         [Test]

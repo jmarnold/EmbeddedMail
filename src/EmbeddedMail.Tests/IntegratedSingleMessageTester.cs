@@ -15,29 +15,30 @@ namespace EmbeddedMail.Tests
         private SmtpClient theClient;
         private const string ccAddress = "copy@domain.com";
         private const string bccAddress = "blind@domain.com";
+        private const string from = "x@domain.com";
+        private const string to = "y@domain.com";
+        private const string subject = "Hello there";
+        private const string body = "testBODY1289523";
+
+
 
         [TestFixtureSetUp]
         public void BeforeAll()
         {
             theServer = EmbeddedSmtpServer.Local(8181);
 
-            theMessage = new MailMessage("x@domain.com", "y@domain.com", "Hello there",
-                                            "O hai, here is a url for you: http://localhost/something/something/else/is/cool");
+            theMessage = new MailMessage(from, to, subject, body);
             theMessage.CC.Add(ccAddress);
             theMessage.Bcc.Add(bccAddress);
             theServer.Start();
 
-            theClient = new SmtpClient("localhost", theServer.Port);
+            theClient = new SmtpClient("127.0.0.1", theServer.Port);
             theClient.UseDefaultCredentials = false;
-            theClient.Credentials = new NetworkCredential("x@domain.com", "1234567890");
+            theClient.Credentials = new NetworkCredential("x", "1234567890");
 
-            try {
-              theClient.Send(theMessage);
-            } catch (Exception ex) {
-              //Error, could not send the message
-            }
-
-      theServer.WaitForMessages();
+            
+            theClient.Send(theMessage);
+            theServer.WaitForMessages();
         }
 
         [TestFixtureTearDown]
@@ -54,8 +55,8 @@ namespace EmbeddedMail.Tests
             message.From.ShouldBe(theMessage.From);
             message.To.First().ShouldBe(theMessage.To.First());
             message.Subject.ShouldBe(theMessage.Subject);
-            message.Body.ShouldBe(theMessage.Body);
-
+            message.Body.Substring(0,theMessage.Body.Length).ShouldBe(theMessage.Body);
+            //Above line is a fix for erroneous cross-platform line ending conflicts
             message.CC.Single().Address.ShouldBe(ccAddress);
             message.Bcc.Single().Address.ShouldBe(bccAddress);
         }
