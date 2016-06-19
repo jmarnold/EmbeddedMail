@@ -52,12 +52,15 @@ namespace EmbeddedMail {
         }
 
         if (!String.IsNullOrWhiteSpace(token.Data)) SmtpLog.Info(token.Data ?? "");
+        var authorized = false;
         var handler = ProtocolHandlers.HandlerFor(token);
-        var cp = handler.Handle(token, this);
+        var cp = handler.Handle(token, this, authorized);
         if (cp == ContinueProcessing.Stop) {
           break;
         } else if (cp == ContinueProcessing.ContinueAuth) {
-          new AuthPlainHandler().Handle(new SmtpToken() { Data = _reader.ReadLine() }, this);
+          if(new AuthPlainHandler().Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
+            authorized = true;
+          }
         }
 
         // detect if done with DATA command; set timeout = 5 seconds afterwards.

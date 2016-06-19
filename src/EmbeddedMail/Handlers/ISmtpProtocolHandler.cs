@@ -7,6 +7,6 @@ namespace EmbeddedMail.Handlers {
 
   public interface ISmtpProtocolHandler {
     bool Matches(SmtpToken token);
-    ContinueProcessing Handle(SmtpToken token, ISmtpSession session);
+    ContinueProcessing Handle(SmtpToken token, ISmtpSession session, bool authorized);
   }
 }

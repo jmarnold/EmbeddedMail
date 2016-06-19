@@ -17,7 +17,12 @@ namespace EmbeddedMail.Handlers {
       return true;
     }
 
-    public ContinueProcessing Handle(SmtpToken token, ISmtpSession session) {
+    public ContinueProcessing Handle(SmtpToken token, ISmtpSession session, bool authorized) {
+      if (!authorized) {
+        session.WriteResponse("530 Authorization Required");
+        return ContinueProcessing.ContinueAuth;
+      }
+
       _messageGatherer.AppendLine(token.Data);
 
       if (token.Data != null && token.Data.Trim() == ".") {

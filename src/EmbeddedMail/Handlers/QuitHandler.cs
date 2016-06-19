@@ -7,7 +7,7 @@ namespace EmbeddedMail.Handlers
             return token.Command == "QUIT";
         }
 
-        public ContinueProcessing Handle(SmtpToken token, ISmtpSession session)
+        public ContinueProcessing Handle(SmtpToken token, ISmtpSession session, bool authorized)
         {
             session.WriteResponse("221 Bye");
             return ContinueProcessing.Stop;
