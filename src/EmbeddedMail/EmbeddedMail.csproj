@@ -72,6 +72,7 @@
     <Compile Include="Handlers\RegisterAddressesHandler.cs" />
     <Compile Include="Handlers\StringExtensions.cs" />
     <Compile Include="EmbeddedSmtpServer.cs" />
+    <Compile Include="ISmtpAuthorization.cs" />
     <Compile Include="ISmtpSession.cs" />
     <Compile Include="ISocket.cs" />
     <Compile Include="MimeKitExtensions.cs" />

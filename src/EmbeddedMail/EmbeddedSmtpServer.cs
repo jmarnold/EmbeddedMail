@@ -15,15 +15,17 @@ namespace EmbeddedMail {
   }
 
   public class EmbeddedSmtpServer : ISmtpServer {
+    private readonly ISmtpAuthorization _auth;
     private readonly IList<MailMessage> _messages = new List<MailMessage>();
     private readonly IList<ISmtpSession> _sessions = new List<ISmtpSession>();
     private bool _closed;
 
-    public EmbeddedSmtpServer(int port = 25)
-        : this(IPAddress.Any, port) {
+    public EmbeddedSmtpServer(int port = 25, ISmtpAuthorization auth = null)
+        : this(IPAddress.Any, port, auth) {
     }
 
-    public EmbeddedSmtpServer(IPAddress address, int port = 25) {
+    public EmbeddedSmtpServer(IPAddress address, int port = 25, ISmtpAuthorization auth = null) {
+      this._auth = auth;
       Address = address;
       Port = port;
       Listener = new TcpListener(Address, port);
@@ -86,7 +88,6 @@ namespace EmbeddedMail {
         error(e);
         return Task.Factory.StartNew(() => { });
       }
-
     }
 
     public void OnClientConnect(ISocket clientSocket) {
@@ -95,7 +96,7 @@ namespace EmbeddedMail {
       SmtpLog.Info("Client connected");
       ListenForClients();
 
-      var session = new SmtpSession(clientSocket);
+      var session = new SmtpSession(clientSocket, this._auth);
       session.OnMessage.Add(_messages.Add);
       if (this.OnSessionStart != null) this.OnSessionStart(session);
       session.Start();

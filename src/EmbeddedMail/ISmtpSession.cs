@@ -16,13 +16,15 @@ namespace EmbeddedMail {
   }
 
   public class SmtpSession : ISmtpSession {
+    protected readonly ISmtpAuthorization _auth;
     private readonly ISocket _socket;
     private StreamWriter _writer;
     private StreamReader _reader;
     private readonly IList<MailMessage> _messages = new List<MailMessage>();
     private readonly IList<string> _recipients = new List<string>();
 
-    public SmtpSession(ISocket socket) {
+    public SmtpSession(ISocket socket, ISmtpAuthorization auth) {
+      this._auth = auth;
       _socket = socket;
       OnMessage = new List<Action<MailMessage>>();
     }
@@ -58,7 +60,7 @@ namespace EmbeddedMail {
         if (cp == ContinueProcessing.Stop) {
           break;
         } else if (cp == ContinueProcessing.ContinueAuth) {
-          if(new AuthPlainHandler().Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
+          if(new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
             authorized = true;
           }
         }

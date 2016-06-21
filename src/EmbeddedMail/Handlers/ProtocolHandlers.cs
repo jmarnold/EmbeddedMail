@@ -14,7 +14,7 @@ namespace EmbeddedMail.Handlers {
       Handlers.Clear();
       Handlers.Add(new HeloHandler());
       Handlers.Add(new EhloHandler());
-      Handlers.Add(new AuthPlainHandler());
+      //Handlers.Add(new AuthPlainHandler());
       Handlers.Add(new QuitHandler());
       Handlers.Add(new RegisterAddressesHandler());
       Handlers.Add(new DataHandler());
