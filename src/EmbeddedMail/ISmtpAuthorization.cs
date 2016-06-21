@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace EmbeddedMail {
   public interface ISmtpAuthorization {
-    bool SmtpAuthorization(string username, string password);
+    bool IsAuthorized(string username, string password);
   }
 }

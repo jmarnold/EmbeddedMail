@@ -28,7 +28,7 @@ namespace EmbeddedMail.Handlers {
         //This is where actual authentication should happen instead of auto-returning 235 success
         //For more SMTP protocol: http://www.samlogic.net/articles/smtp-commands-reference-auth.htm
 
-        if (this._auth.SmtpAuthorization(email, password)) {
+        if (this._auth.IsAuthorized(email, password)) {
           session.WriteResponse("235 OK");
           return ContinueProcessing.Continue;
         } else {
