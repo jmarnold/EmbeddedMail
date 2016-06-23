@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using EmbeddedMail.Handlers;
+using Serilog;
 
 namespace EmbeddedMail {
   public interface ISmtpSession : IDisposable {
@@ -63,9 +64,14 @@ namespace EmbeddedMail {
         } else if (cp == ContinueProcessing.Continue && handler is AuthPlainHandler) {
           authorized = true;
         } else if (cp == ContinueProcessing.ContinueAuth) {
-          if (new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
-            authorized = true;
+          try {
+            if (new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
+              authorized = true;
+            }
+          } catch(Exception ex) { //If anything goes wrong here its likely the client clicking cancel. We dont care
+            Log.Debug("An exception occurred in AuthPlainHandler. Client likely cancelled connection", ex);
           }
+          
         }
 
         // detect if done with DATA command; set timeout = 5 seconds afterwards.
