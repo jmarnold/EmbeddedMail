@@ -17,33 +17,27 @@ namespace EmbeddedMail.Handlers {
       /*if (authorized) { //Do NOT skip this /w authorized or it breaks SMTP clients
         session.WriteResponse("235 OK");
         return ContinueProcessing.Continue;
-      } else*/ if (!String.IsNullOrEmpty(token.Data) && token.Data == token.Command) {
+      } else*/
+      if (!String.IsNullOrEmpty(token.Data) && token.Data == token.Command) {
         session.WriteResponse("334");
         return ContinueProcessing.ContinueAuth;
       } else if (!String.IsNullOrEmpty(token.Data) && token.Data.StartsWith(AUTH_PLAIN)) {
-        try {
-          var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(token.Data.Split(' ')[2]));
-          var email = decoded.Split('\0')[1];
-          var password = decoded.Split('\0')[2];
-          Log.Information("SMTP AUTH ATTEMPT!!! Email: '{0}' Password: '{1}'", email, password);
-          //This is where actual authentication should happen instead of auto-returning 235 success
-          //For more SMTP protocol: http://www.samlogic.net/articles/smtp-commands-reference-auth.htm
+        var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(token.Data.Split(' ')[2]));
+        var email = decoded.Split('\0')[1];
+        var password = decoded.Split('\0')[2];
+        //This is where actual authentication should happen instead of auto-returning 235 success
+        //For more SMTP protocol: http://www.samlogic.net/articles/smtp-commands-reference-auth.htm
 
-          //check email and password vs DB - 
-          //235 + Continue if matches
+        if (this._auth.IsAuthorized(email, password)) {
           session.WriteResponse("235 OK");
           return ContinueProcessing.Continue;
-          //534 wrong password + stop if not
-        } catch (Exception ex) {
-          Log.Debug("SMTP Authentication Error", ex);
-          session.WriteResponse("535 Authentication Failed.");
-          return ContinueProcessing.Stop;
+        } else {
+          session.WriteResponse("535 Authentication failed. Restarting authentication process."); //from hMailServer
+          return ContinueProcessing.ContinueAuth;
         }
-
-
       } else {
         Log.Error("Unknown SMTP AUTH Protocol. Fix Required!");
-        //535 auth failed?
+        session.WriteResponse("504 Authentication mechanism not supported"); //from hMailServer
         return ContinueProcessing.Stop;
       }
     }
