@@ -43,6 +43,8 @@ namespace EmbeddedMail {
       _writer.WriteLine(greeting);
       SmtpLog.Debug(greeting);
 
+      var handlers = new ProtocolHandlers(this._auth);
+      var authorized = false;
       var isMessageBody = false;
       var dataReceived = false;
       while (_socket.Connected) {
@@ -54,13 +56,14 @@ namespace EmbeddedMail {
         }
 
         if (!String.IsNullOrWhiteSpace(token.Data)) SmtpLog.Info(token.Data ?? "");
-        var authorized = false;
-        var handler = ProtocolHandlers.HandlerFor(token);
+        var handler = handlers.HandlerFor(token);
         var cp = handler.Handle(token, this, authorized);
         if (cp == ContinueProcessing.Stop) {
           break;
+        } else if (cp == ContinueProcessing.Continue && handler is AuthPlainHandler) {
+          authorized = true;
         } else if (cp == ContinueProcessing.ContinueAuth) {
-          if(new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
+          if (new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
             authorized = true;
           }
         }
