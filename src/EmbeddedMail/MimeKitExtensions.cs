@@ -76,7 +76,7 @@ namespace EmbeddedMail {
 
           message.Attachments.Add(attachment);
         } else {
-          message.IsBodyHtml = part.ContentType.Matches("text", "html");
+          message.IsBodyHtml = part.ContentType.IsMimeType("text", "html");
           message.Body = ((MimeKit.TextPart) part).Text;
         }
       }
