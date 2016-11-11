@@ -22,7 +22,10 @@ namespace EmbeddedMail.Handlers {
         session.WriteResponse("334");
         return ContinueProcessing.ContinueAuth;
       } else if (!String.IsNullOrEmpty(token.Data) && token.Data.StartsWith(AUTH_PLAIN)) {
-        var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(token.Data.Split(' ')[2]));
+        var encoded = token.Data.Split(' ')[2];
+        if (encoded.Length == 0)
+          encoded = token.Data.Split(' ')[3];
+        var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(encoded));
         var email = decoded.Split('\0')[1];
         var password = decoded.Split('\0')[2];
         //This is where actual authentication should happen instead of auto-returning 235 success
