@@ -1,3 +1,5 @@
+// EDITED BY BLOCHER CONSULTING
+
 namespace EmbeddedMail.Handlers {
   public enum ContinueProcessing {
     Stop,

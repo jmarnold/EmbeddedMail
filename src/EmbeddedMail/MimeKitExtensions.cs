@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿// EDITED BY BLOCHER CONSULTING
+
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;

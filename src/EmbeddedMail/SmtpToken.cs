@@ -1,3 +1,5 @@
+// EDITED BY BLOCHER CONSULTING
+
 using System.Collections.Generic;
 
 namespace EmbeddedMail {

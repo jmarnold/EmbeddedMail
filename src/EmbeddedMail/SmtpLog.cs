@@ -1,3 +1,5 @@
+// EDITED BY BLOCHER CONSULTING
+
 using System;
 
 namespace EmbeddedMail
