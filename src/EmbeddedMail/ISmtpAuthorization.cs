@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace EmbeddedMail {
   public interface ISmtpAuthorization {
-    bool IsAuthorized(string username, string password);
+    IEnumerable<string> GetAuthorizedEmailAddresses(string username, string password);
   }
 }

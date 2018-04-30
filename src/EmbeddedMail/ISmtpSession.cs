@@ -11,6 +11,7 @@ using Serilog;
 
 namespace EmbeddedMail {
   public interface ISmtpSession : IDisposable {
+    IEnumerable<string> AuthorizationEmailAddresses { get; set; }
     IEnumerable<string> Recipients { get; }
     string RemoteAddress { get; }
     void WriteResponse(string data);
@@ -29,10 +30,11 @@ namespace EmbeddedMail {
     public SmtpSession(ISocket socket, ISmtpAuthorization auth) {
       this._auth = auth;
       _socket = socket;
-      OnMessage = new List<Action<MailMessage>>();
+      OnMessage = new List<Action<MailMessage, IEnumerable<string>>>();
     }
 
-    public List<Action<MailMessage>> OnMessage { get; private set; }
+    public List<Action<MailMessage, IEnumerable<string>>> OnMessage { get; private set; }
+    public IEnumerable<string> AuthorizationEmailAddresses { get; set; } = new List<string>();
 
     public void Start() {
       if (!_socket.Connected) return;
@@ -111,7 +113,7 @@ namespace EmbeddedMail {
 
     public void SaveMessage(MailMessage message) {
       _messages.Add(message);
-      OnMessage.ForEach(f => f(message));
+      OnMessage.ForEach(f => f(message, AuthorizationEmailAddresses));
     }
 
     public void AddRecipient(string address) {

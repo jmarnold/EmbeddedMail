@@ -3,6 +3,7 @@
 using System;
 using Serilog;
 using System.Text;
+using System.Linq;
 
 namespace EmbeddedMail.Handlers {
   public class AuthPlainHandler : ISmtpProtocolHandler {
@@ -33,7 +34,9 @@ namespace EmbeddedMail.Handlers {
         //This is where actual authentication should happen instead of auto-returning 235 success
         //For more SMTP protocol: http://www.samlogic.net/articles/smtp-commands-reference-auth.htm
 
-        if (this._auth.IsAuthorized(email, password)) {
+        var authorizationEmailAddresses = _auth.GetAuthorizedEmailAddresses(email, password);
+        session.AuthorizationEmailAddresses = authorizationEmailAddresses;
+        if (authorizationEmailAddresses.Any()) {
           session.WriteResponse("235 OK");
           return ContinueProcessing.Continue;
         } else {

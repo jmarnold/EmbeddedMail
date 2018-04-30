@@ -99,7 +99,7 @@ namespace EmbeddedMail {
       ListenForClients();
 
       var session = new SmtpSession(clientSocket, this._auth);
-      session.OnMessage.Add(_messages.Add);
+      session.OnMessage.Add((m, ts) => _messages.Add(m));
       if (this.OnSessionStart != null) this.OnSessionStart(session);
       session.Start();
 
