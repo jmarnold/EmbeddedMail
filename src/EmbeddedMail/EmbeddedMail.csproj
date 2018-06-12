@@ -13,7 +13,7 @@
   </PropertyGroup>
    <ItemGroup>
     <PackageReference Include="BouncyCastle.Crypto.dll" Version="1.8.1" />
-    <PackageReference Include="MimeKit" Version="1.10.0" />
+    <PackageReference Include="MimeKit" Version="2.0.4" />
     <PackageReference Include="Serilog" Version="2.6.0" />
   </ItemGroup>
 </Project>
