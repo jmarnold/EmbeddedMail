@@ -39,7 +39,7 @@ namespace EmbeddedMail.Handlers {
 
     public string CurrentMessage { get { return _messageGatherer.ToString(); } }
 
-    public System.Net.Mail.MailMessage CreateMessage(StringBuilder builder, ISmtpSession session) {
+    public MimeMessage CreateMessage(StringBuilder builder, ISmtpSession session) {
       var message = MimeMessage.Load(new MemoryStream(Encoding.UTF8.GetBytes(builder.ToString())));
       //var message = new MessageParser().Parse(builder.ToString());
 
@@ -49,7 +49,7 @@ namespace EmbeddedMail.Handlers {
           .Where(x => !message.To.Any(y => y.Name == x) && !message.Cc.Any(y => y.Name == x))
           .Each(x => message.Bcc.Add(InternetAddress.Parse(x)));
 
-      return message.ConvertToMailMessage();
+      return message;
     }
   }
 

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Mail;
 using EmbeddedMail.Handlers;
+using MimeKit;
 using Serilog;
 
 namespace EmbeddedMail {
@@ -15,7 +15,7 @@ namespace EmbeddedMail {
     IEnumerable<string> Recipients { get; }
     string RemoteAddress { get; }
     void WriteResponse(string data);
-    void SaveMessage(MailMessage message);
+    void SaveMessage(MimeMessage message);
     void AddRecipient(string address);
   }
 
@@ -24,16 +24,16 @@ namespace EmbeddedMail {
     private readonly ISocket _socket;
     private StreamWriter _writer;
     private StreamReader _reader;
-    private readonly IList<MailMessage> _messages = new List<MailMessage>();
+    private readonly IList<MimeMessage> _messages = new List<MimeMessage>();
     private readonly IList<string> _recipients = new List<string>();
 
     public SmtpSession(ISocket socket, ISmtpAuthorization auth) {
       this._auth = auth;
       _socket = socket;
-      OnMessage = new List<Action<MailMessage, IEnumerable<string>>>();
+      OnMessage = new List<Action<MimeMessage, IEnumerable<string>>>();
     }
 
-    public List<Action<MailMessage, IEnumerable<string>>> OnMessage { get; private set; }
+    public List<Action<MimeMessage, IEnumerable<string>>> OnMessage { get; private set; }
     public IEnumerable<string> AuthorizationEmailAddresses { get; set; } = new List<string>();
 
     public void Start() {
@@ -111,7 +111,7 @@ namespace EmbeddedMail {
       _writer.WriteLine(data);
     }
 
-    public void SaveMessage(MailMessage message) {
+    public void SaveMessage(MimeMessage message) {
       _messages.Add(message);
       OnMessage.ForEach(f => f(message, AuthorizationEmailAddresses));
     }

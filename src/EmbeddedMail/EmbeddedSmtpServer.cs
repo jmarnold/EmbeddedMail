@@ -4,21 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.Net.Mail;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using MimeKit;
 
 namespace EmbeddedMail {
   public interface ISmtpServer : IDisposable {
-    IEnumerable<MailMessage> ReceivedMessages();
+    IEnumerable<MimeMessage> ReceivedMessages();
     void Start();
     void Stop();
   }
 
   public class EmbeddedSmtpServer : ISmtpServer {
     private readonly ISmtpAuthorization _auth;
-    private readonly IList<MailMessage> _messages = new List<MailMessage>();
+    private readonly IList<MimeMessage> _messages = new List<MimeMessage>();
     private readonly IList<ISmtpSession> _sessions = new List<ISmtpSession>();
     private bool _closed;
 
@@ -37,7 +37,7 @@ namespace EmbeddedMail {
     public IPAddress Address { get; private set; }
     public int Port { get; private set; }
 
-    public IEnumerable<MailMessage> ReceivedMessages() {
+    public IEnumerable<MimeMessage> ReceivedMessages() {
       return _messages;
     }
 
