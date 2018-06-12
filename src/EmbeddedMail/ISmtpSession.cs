@@ -72,8 +72,8 @@ namespace EmbeddedMail {
             if (new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
               authorized = true;
             }
-          } catch(Exception ex) { //If anything goes wrong here its likely the client clicking cancel. We dont care
-            Log.Debug("An exception occurred in AuthPlainHandler. Client likely cancelled connection", ex);
+          } catch(Exception e) { //If anything goes wrong here its likely the client clicking cancel. We dont care
+            Log.Debug(e, "An exception occurred in AuthPlainHandler. Client likely cancelled connection");
           }
           
         }
