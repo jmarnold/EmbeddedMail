@@ -44,14 +44,11 @@ namespace EmbeddedMail.Handlers {
           return ContinueProcessing.ContinueAuth;
         }
       } else {
-        Log.Error("Unknown SMTP AUTH Protocol. Fix Required!");
+        SmtpLog.Error($"Unknown SMTP AUTH Protocol. Fix Required! Token data is {token.Data}");
         session.WriteResponse("504 Authentication mechanism not supported"); //from hMailServer
         return ContinueProcessing.Stop;
       }
     }
 
-    public virtual bool SmtpAuthorization(string username, string password) {
-      return true;
-    }
   }
 }

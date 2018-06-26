@@ -1,47 +1,28 @@
 // EDITED BY BLOCHER CONSULTING
 
 using System;
+using Serilog;
 
 namespace EmbeddedMail
 {
-    // Shamelessly ripped out of Fleck. Thanks, Jason ;)
-    public enum LogLevel
-    {
-        Debug,
-        Info,
-        Warn,
-        Error
-    }
-
     public class SmtpLog
     {
-        public static LogLevel Level = LogLevel.Debug;
+        public static ILogger Logger { get; set; }
 
-        public static Action<LogLevel, string, Exception> LogAction = (level, message, ex) =>
-        {
-            if (level >= Level)
-                Console.WriteLine("{0} [{1}] {2} {3}", DateTime.UtcNow, level, message, ex);
-        };
+        public static void Error(string message) =>
+            Logger.Warning(message);
 
-        public static void Warn(string message, Exception ex = null)
-        {
-            LogAction(LogLevel.Warn, message, ex);
-        }
+        public static void Error(string message, Exception e) =>
+            Logger.Warning(e, message);
 
-        public static void Error(string message, Exception ex = null)
-        {
-            LogAction(LogLevel.Error, message, ex);
-        }
+        public static void Debug(string message) =>
+            Logger.Verbose(message);
 
-        public static void Debug(string message, Exception ex = null)
-        {
-            LogAction(LogLevel.Debug, message, ex);
-        }
+        public static void Debug(string message, Exception e) =>
+            Logger.Verbose(e, message);
 
-        public static void Info(string message, Exception ex = null)
-        {
-            LogAction(LogLevel.Info, message, ex);
-        }
+        public static void Info(string message) =>
+            Logger.Debug(message);
 
-    }
+  }
 }

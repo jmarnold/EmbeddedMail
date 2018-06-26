@@ -73,7 +73,7 @@ namespace EmbeddedMail {
               authorized = true;
             }
           } catch(Exception e) { //If anything goes wrong here its likely the client clicking cancel. We dont care
-            Log.Debug(e, "An exception occurred in AuthPlainHandler. Client likely cancelled connection");
+            SmtpLog.Debug("An exception occurred in AuthPlainHandler. Client likely cancelled connection", e);
           }
           
         }

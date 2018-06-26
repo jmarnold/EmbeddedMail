@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using MimeKit;
+using Serilog;
 
 namespace EmbeddedMail {
   public interface ISmtpServer : IDisposable {
@@ -22,15 +23,16 @@ namespace EmbeddedMail {
     private readonly IList<ISmtpSession> _sessions = new List<ISmtpSession>();
     private bool _closed;
 
-    public EmbeddedSmtpServer(int port = 25, ISmtpAuthorization auth = null)
-        : this(IPAddress.Any, port, auth) {
+    public EmbeddedSmtpServer(int port = 25, ISmtpAuthorization auth = null, ILogger logger = null)
+        : this(IPAddress.Any, port, auth, logger) {
     }
 
-    public EmbeddedSmtpServer(IPAddress address, int port = 25, ISmtpAuthorization auth = null) {
+    public EmbeddedSmtpServer(IPAddress address, int port = 25, ISmtpAuthorization auth = null, ILogger logger = null) {
       this._auth = auth;
       Address = address;
       Port = port;
       Listener = new TcpListener(Address, port);
+      SmtpLog.Logger = logger ?? new LoggerConfiguration().CreateLogger();
     }
 
     public TcpListener Listener { get; private set; }
