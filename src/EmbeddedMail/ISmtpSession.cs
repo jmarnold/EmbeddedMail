@@ -20,6 +20,9 @@ namespace EmbeddedMail {
   }
 
   public class SmtpSession : ISmtpSession {
+
+    private readonly ILogger _log = Log.Logger.ForContext<SmtpSession>();
+
     protected readonly ISmtpAuthorization _auth;
     private readonly ISocket _socket;
     private StreamWriter _writer;
@@ -46,6 +49,7 @@ namespace EmbeddedMail {
 
       var greeting = String.Format("220 {0} ESMTP", _socket.LocalIpAddress);
       _writer.WriteLine(greeting);
+      _log.Debug("S: {Message}", greeting);
       SmtpLog.Debug(greeting);
 
       var handlers = new ProtocolHandlers(this._auth);
@@ -55,7 +59,9 @@ namespace EmbeddedMail {
       while (_socket.Connected) {
         SmtpToken token;
         try {
-          token = SmtpToken.FromLine(_reader.ReadLine(), isMessageBody);
+          var line = _reader.ReadLine();
+          _log.Debug("C: {Message}", line);
+          token = SmtpToken.FromLine(line, isMessageBody);
         } catch (IOException) {
           break;
         }
@@ -69,7 +75,9 @@ namespace EmbeddedMail {
           authorized = true;
         } else if (cp == ContinueProcessing.ContinueAuth) {
           try {
-            if (new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = _reader.ReadLine() }, this, authorized) == ContinueProcessing.Continue) {
+            var line = _reader.ReadLine();
+            _log.Debug("C: {Message}", line);
+            if (new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = line }, this, authorized) == ContinueProcessing.Continue) {
               authorized = true;
             }
           } catch(Exception e) { //If anything goes wrong here its likely the client clicking cancel. We dont care
@@ -108,6 +116,7 @@ namespace EmbeddedMail {
 
     public void WriteResponse(string data) {
       SmtpLog.Debug(data);
+      _log.Debug("S: {Message}", data);
       _writer.WriteLine(data);
     }
 
