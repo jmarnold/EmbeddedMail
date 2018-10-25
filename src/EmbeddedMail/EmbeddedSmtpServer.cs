@@ -1,6 +1,7 @@
 // EDITED BY BLOCHER CONSULTING
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
@@ -21,6 +22,10 @@ namespace EmbeddedMail {
     private readonly ISmtpAuthorization _auth;
     private readonly IList<MimeMessage> _messages = new List<MimeMessage>();
     private readonly IList<ISmtpSession> _sessions = new List<ISmtpSession>();
+
+    private int _connectedSessionCount = 0;
+    private object _connectedCountLock = new object();
+
     private bool _closed;
 
     public EmbeddedSmtpServer(int port = 25, ISmtpAuthorization auth = null, ILogger logger = null)
@@ -97,13 +102,24 @@ namespace EmbeddedMail {
     public void OnClientConnect(ISocket clientSocket) {
       if (_closed) return;
 
-      SmtpLog.Info("Client connected");
       ListenForClients();
 
       var session = new SmtpSession(clientSocket, this._auth);
+
+      lock (_connectedCountLock) {
+        _connectedSessionCount++;
+      }
+      SmtpLog.Logger.Debug("Client connected. Now {ConnectedClientCount} clients connected.", _connectedSessionCount);
+
       session.OnMessage.Add((m, ts) => _messages.Add(m));
       if (this.OnSessionStart != null) this.OnSessionStart(session);
       session.Start();
+
+
+      lock (_connectedCountLock) {
+        _connectedSessionCount--;
+      }
+      SmtpLog.Logger.Debug("Client disconnected. Now {ConnectedClientCount} clients connected.", _connectedSessionCount);
 
       _sessions.Add(session);
     }
