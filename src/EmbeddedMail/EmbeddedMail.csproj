@@ -3,7 +3,7 @@
     <TargetFramework>net45</TargetFramework>
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <LangVersion>latest</LangVersion>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <Description>Packed version of EmbeddedMail after modifications by Blocher Consulting</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>BlocherEmbeddedMail</PackageId>
