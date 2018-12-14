@@ -126,10 +126,17 @@ namespace EmbeddedMail {
 
     public void Dispose() {
       Stop();
-      // I don't grok the disposal lifecycle for the sockets yet
-      Listener.Stop();
 
       _sessions.Each(x => x.Dispose());
+
+      /* TDW:
+       * The comment below is from jmarnold.
+       * Stopping the listener used to happen just before disposing each session.
+       * I swapped these two because session disposal tries to write to the underlying socket,
+       * which is disposed when the listener is stopped.
+       */
+      // I don't grok the disposal lifecycle for the sockets yet
+      Listener.Stop();
     }
 
     /// <summary>
