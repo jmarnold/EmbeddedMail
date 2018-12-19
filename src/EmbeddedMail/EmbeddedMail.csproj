@@ -3,13 +3,14 @@
     <TargetFramework>net45</TargetFramework>
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <LangVersion>latest</LangVersion>
-    <Version>3.0.3</Version>
+    <Version>3.0.4</Version>
     <Description>Packed version of EmbeddedMail after modifications by Blocher Consulting</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>BlocherEmbeddedMail</PackageId>
     <Authors>BlocherEmbeddedMail</Authors>
     <Company>BlocherEmbeddedMail</Company>
     <Product>BlocherEmbeddedMail</Product>
+    <AssemblyVersion>3.0.4.0</AssemblyVersion>
   </PropertyGroup>
    <ItemGroup>
     <PackageReference Include="BouncyCastle.Crypto.dll" Version="1.8.1" />
