@@ -43,7 +43,7 @@ namespace EmbeddedMail.Handlers {
           return ContinueProcessing.ContinueAuth;
         }
       } else {
-        SmtpLog.Error($"Unknown SMTP AUTH Protocol. Fix Required! Token data is {token.Data}");
+        SmtpLog.Logger.Warning("Unknown SMTP AUTH Protocol. Fix Required! Token data is {TokenData}", token.Data);
         session.WriteResponse("504 Authentication mechanism not supported"); //from hMailServer
         return ContinueProcessing.Stop;
       }

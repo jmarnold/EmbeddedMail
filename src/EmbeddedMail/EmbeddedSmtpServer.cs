@@ -51,7 +51,7 @@ namespace EmbeddedMail {
 
     public void Start() {
       Listener.Start();
-      SmtpLog.Info(string.Format("Server started at {0}", new IPEndPoint(Address, Port)));
+      SmtpLog.Logger.Information("Server started at {IpEndPoint}", new IPEndPoint(Address, Port));
       ListenForClients();
     }
 
@@ -78,7 +78,7 @@ namespace EmbeddedMail {
 
       if (exc is ObjectDisposedException) return;
 
-      SmtpLog.Error("Listener socket is closed", exc);
+      SmtpLog.Logger.Warning(exc, "Listener socket is closed");
     }
 
     private Task ListenForClients(Action<ISocket> callback, Action<Exception> error) {

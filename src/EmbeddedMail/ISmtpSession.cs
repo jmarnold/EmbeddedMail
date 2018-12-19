@@ -80,9 +80,8 @@ namespace EmbeddedMail {
               authorized = true;
             }
           } catch(Exception e) { //If anything goes wrong here its likely the client clicking cancel. We dont care
-            SmtpLog.Debug("An exception occurred in AuthPlainHandler. Client likely cancelled connection", e);
+            SmtpLog.Logger.Warning(e, "An exception occurred in AuthPlainHandler. Client likely cancelled connection.");
           }
-          
         }
 
         // detect if done with DATA command; set timeout = 5 seconds afterwards.
