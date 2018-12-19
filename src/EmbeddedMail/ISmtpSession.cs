@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using EmbeddedMail.Handlers;
 using MimeKit;
 using Serilog;
@@ -21,7 +22,7 @@ namespace EmbeddedMail {
 
   public class SmtpSession : ISmtpSession {
 
-    private readonly ILogger _log = Log.Logger.ForContext<SmtpSession>();
+    private readonly ILogger _log = SmtpLog.Logger.ForContext<SmtpSession>();
 
     protected readonly ISmtpAuthorization _auth;
     private readonly ISocket _socket;
@@ -50,7 +51,6 @@ namespace EmbeddedMail {
       var greeting = String.Format("220 {0} ESMTP", _socket.LocalIpAddress);
       _writer.WriteLine(greeting);
       _log.Debug("S: {Message}", greeting);
-      SmtpLog.Debug(greeting);
 
       var handlers = new ProtocolHandlers(this._auth);
       var authorized = false;
@@ -65,8 +65,7 @@ namespace EmbeddedMail {
         } catch (IOException) {
           break;
         }
-
-        if (!String.IsNullOrWhiteSpace(token.Data)) SmtpLog.Info(token.Data ?? "");
+        
         var handler = handlers.HandlerFor(token);
         var cp = handler.Handle(token, this, authorized);
         if (cp == ContinueProcessing.Stop) {
@@ -115,7 +114,6 @@ namespace EmbeddedMail {
     }
 
     public void WriteResponse(string data) {
-      SmtpLog.Debug(data);
       _log.Debug("S: {Message}", data);
       _writer.WriteLine(data);
     }
