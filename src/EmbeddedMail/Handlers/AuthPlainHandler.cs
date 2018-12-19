@@ -1,9 +1,8 @@
 // EDITED BY BLOCHER CONSULTING
 
 using System;
-using Serilog;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace EmbeddedMail.Handlers {
   public class AuthPlainHandler : ISmtpProtocolHandler {

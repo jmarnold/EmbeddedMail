@@ -1,7 +1,6 @@
 // EDITED BY BLOCHER CONSULTING
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
@@ -24,7 +23,7 @@ namespace EmbeddedMail {
     private readonly IList<ISmtpSession> _sessions = new List<ISmtpSession>();
 
     private int _connectedSessionCount = 0;
-    private object _connectedCountLock = new object();
+    private readonly object _connectedCountLock = new object();
 
     private bool _closed;
 
