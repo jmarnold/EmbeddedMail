@@ -20,7 +20,6 @@ namespace EmbeddedMail {
   public class EmbeddedSmtpServer : ISmtpServer {
     private readonly ISmtpAuthorization _auth;
     private readonly IList<MimeMessage> _messages = new List<MimeMessage>();
-    private readonly IList<ISmtpSession> _sessions = new List<ISmtpSession>();
 
     private int _connectedSessionCount = 0;
     private readonly object _connectedCountLock = new object();
@@ -103,8 +102,7 @@ namespace EmbeddedMail {
 
       ListenForClients();
 
-      var session = new SmtpSession(clientSocket, this._auth);
-
+      using (var session = new SmtpSession(clientSocket, _auth)) {
       lock (_connectedCountLock) {
         _connectedSessionCount++;
       }
@@ -119,22 +117,11 @@ namespace EmbeddedMail {
         _connectedSessionCount--;
       }
       SmtpLog.Logger.Debug("Client disconnected. Now {ConnectedClientCount} clients connected.", _connectedSessionCount);
-
-      _sessions.Add(session);
+      }
     }
 
     public void Dispose() {
       Stop();
-
-      _sessions.Each(x => x.Dispose());
-
-      /* TDW:
-       * The comment below is from jmarnold.
-       * Stopping the listener used to happen just before disposing each session.
-       * I swapped these two because session disposal tries to write to the underlying socket,
-       * which is disposed when the listener is stopped.
-       */
-      // I don't grok the disposal lifecycle for the sockets yet
       Listener.Stop();
     }
 
