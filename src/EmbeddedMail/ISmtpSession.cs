@@ -114,11 +114,6 @@ namespace EmbeddedMail {
           _socket.Stream.ReadTimeout = 5000;
         }
       }
-
-      try {
-        _socket.Close();
-        _socket.Dispose();
-      } catch (Exception) { }
     }
 
     public void Dispose() {
