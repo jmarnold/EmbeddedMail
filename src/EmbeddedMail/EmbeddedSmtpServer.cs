@@ -82,11 +82,18 @@ namespace EmbeddedMail {
 
     private Task ListenForClients(Action<ISocket> callback, Action<Exception> error) {
       try {
-        Func<IAsyncResult, ISocket> end = r => new SocketWrapper(Listener.EndAcceptSocket(r));
+        Func<IAsyncResult, Socket> end = r => Listener.EndAcceptSocket(r);
 
         var task = Task.Factory.FromAsync(Listener.BeginAcceptSocket, end, null);
 
-        task.ContinueWith(t => callback(t.Result), TaskContinuationOptions.NotOnFaulted)
+        void disposingCallback(Socket socket) {
+          var wrappedSocket = new SocketWrapper(socket);
+          callback(wrappedSocket);
+          wrappedSocket.Close();
+          wrappedSocket.Dispose();
+          socket.Dispose();
+        };
+        task.ContinueWith(t => disposingCallback(t.Result), TaskContinuationOptions.NotOnFaulted)
             .ContinueWith(t => error(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
 
         return task;
