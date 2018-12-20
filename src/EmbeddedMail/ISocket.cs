@@ -92,12 +92,10 @@ namespace EmbeddedMail {
 
     public void Dispose() {
       if (_stream != null) _stream.Dispose();
-      if (_socket != null) _socket.Dispose();
     }
 
     public void Close() {
       if (_stream != null) _stream.Close();
-      if (_socket != null) _socket.Close();
     }
 
     public int EndSend(IAsyncResult asyncResult) {
