@@ -110,20 +110,20 @@ namespace EmbeddedMail {
       ListenForClients();
 
       using (var session = new SmtpSession(clientSocket, _auth)) {
-      lock (_connectedCountLock) {
-        _connectedSessionCount++;
-      }
-      SmtpLog.Logger.Debug("Client connected. Now {ConnectedClientCount} clients connected.", _connectedSessionCount);
+        lock (_connectedCountLock) {
+          _connectedSessionCount++;
+        }
+        SmtpLog.Logger.Debug("Client connected. Now {ConnectedClientCount} clients connected.", _connectedSessionCount);
 
-      session.OnMessage.Add((m, ts) => _messages.Add(m));
-      if (this.OnSessionStart != null) this.OnSessionStart(session);
-      session.Start();
+        session.OnMessage.Add((m, ts) => _messages.Add(m));
+        if (this.OnSessionStart != null) this.OnSessionStart(session);
+        session.Start();
 
 
-      lock (_connectedCountLock) {
-        _connectedSessionCount--;
-      }
-      SmtpLog.Logger.Debug("Client disconnected. Now {ConnectedClientCount} clients connected.", _connectedSessionCount);
+        lock (_connectedCountLock) {
+          _connectedSessionCount--;
+        }
+        SmtpLog.Logger.Debug("Client disconnected. Now {ConnectedClientCount} clients connected.", _connectedSessionCount);
       }
     }
 
