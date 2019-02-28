@@ -20,10 +20,10 @@ namespace EmbeddedMail.Handlers {
         session.WriteResponse("235 OK");
         return ContinueProcessing.Continue;
       } else*/
-      if (!String.IsNullOrEmpty(token.Data) && token.Data == token.Command) {
+      if (token.Data != "" && token.Data == token.Command) {
         session.WriteResponse("334");
         return ContinueProcessing.ContinueAuth;
-      } else if (!String.IsNullOrEmpty(token.Data) && token.Data.StartsWith(AUTH_PLAIN)) {
+      } else if (token.Data != "" && token.Data.StartsWith(AUTH_PLAIN)) {
         var encoded = token.Data.Split(' ')[2];
         if (encoded.Length == 0)
           encoded = token.Data.Split(' ')[3];

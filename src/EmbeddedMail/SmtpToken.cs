@@ -19,7 +19,7 @@ namespace EmbeddedMail {
     public static SmtpToken FromLine(string line, bool isBody) {
       var command = DataCommand;
       foreach (var cmd in KnownCommands) {
-        if (line != null && line.ToUpper().StartsWith(cmd)) {
+        if (line.ToUpper().StartsWith(cmd)) {
           command = cmd;
           break;
         }

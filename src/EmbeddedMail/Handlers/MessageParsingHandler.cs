@@ -25,7 +25,7 @@ namespace EmbeddedMail.Handlers {
         return ContinueProcessing.ContinueAuth;
       }
 
-      if (token.Data != null && token.Data.Trim() == ".") {
+      if (token.Data.Trim() == ".") {
         _messageGatherer.AppendLine(token.Data.Replace(".", "")); // Remove trailing "." from smtp message 
         session.WriteResponse(string.Format("250 OK"));
         session.SaveMessage(CreateMessage(_messageGatherer, session));
