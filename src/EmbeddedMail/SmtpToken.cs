@@ -16,7 +16,7 @@ namespace EmbeddedMail {
     public string Data { get; set; }
     public bool IsMessageBody { get; set; }
 
-    public static SmtpToken FromLine(string line, bool isBody = false) {
+    public static SmtpToken FromLine(string line, bool isBody) {
       var command = DataCommand;
       foreach (var cmd in KnownCommands) {
         if (line != null && line.ToUpper().StartsWith(cmd)) {
