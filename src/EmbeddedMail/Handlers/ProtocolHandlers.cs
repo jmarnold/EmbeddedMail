@@ -9,7 +9,6 @@ namespace EmbeddedMail.Handlers {
 
     public ProtocolHandlers(ISmtpAuthorization auth) {
       Handlers = new List<ISmtpProtocolHandler>();
-      Handlers.Clear();
       Handlers.Add(new HeloHandler());
       Handlers.Add(new EhloHandler());
       Handlers.Add(new AuthPlainHandler(auth));
