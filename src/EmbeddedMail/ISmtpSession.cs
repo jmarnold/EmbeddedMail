@@ -83,6 +83,13 @@ namespace EmbeddedMail {
         SmtpToken token;
         try {
           var line = _reader.ReadLine();
+          if (line == null) {
+            /*
+             * ReadLine returns `null` if the end of the input stream is reached
+             * https://docs.microsoft.com/en-us/dotnet/api/system.io.streamreader.readline
+             */
+            break;
+          }
           _log.Debug("C: {Message}", line);
           token = SmtpToken.FromLine(line, isMessageBody);
         } catch (IOException) {
