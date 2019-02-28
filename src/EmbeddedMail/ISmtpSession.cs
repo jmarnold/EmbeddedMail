@@ -105,6 +105,13 @@ namespace EmbeddedMail {
         } else if (cp == ContinueProcessing.ContinueAuth) {
           try {
             var line = _reader.ReadLine();
+            if (line == null) {
+              /*
+               * ReadLine returns `null` if the end of the input stream is reached
+               * https://docs.microsoft.com/en-us/dotnet/api/system.io.streamreader.readline
+               */
+              break;
+            }
             _log.Debug("C: {Message}", line);
             if (new AuthPlainHandler(this._auth).Handle(new SmtpToken() { Data = line }, this, authorized) == ContinueProcessing.Continue) {
               authorized = true;
