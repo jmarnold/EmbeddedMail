@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Text;
 using EmbeddedMail.Handlers;
 
 namespace EmbeddedMail
@@ -36,9 +37,31 @@ namespace EmbeddedMail
         {
             if (!_socket.Connected) return;
 
-            _reader = new StreamReader(_socket.Stream);
-            _writer = new StreamWriter(_socket.Stream) { AutoFlush = true };
+            _reader = new StreamReader(
+              stream: _socket.Stream,
+              // the next three values are the defaults when calling the overload that just takes a Stream
+              encoding: Encoding.UTF8,
+              detectEncodingFromByteOrderMarks: true,
+              bufferSize: 1024,
+              // the prevoius three values are the defaults when calling the overload that just takes a Stream
+              leaveOpen: true // don't dispose objects given to you
+            );
             
+            Encoding GetDefaultStreamWriterEncoding() {
+              using (var writer = new StreamWriter(Stream.Null)) {
+                return writer.Encoding;
+              }
+            }
+            
+            _writer = new StreamWriter(
+              stream: _socket.Stream,
+              // the next two values are the defaults when calling the overload that just takes a Stream
+              encoding: GetDefaultStreamWriterEncoding(),
+              bufferSize: 1024,
+              // the previous two values are the defaults when calling the overload that just takes a Stream
+              leaveOpen: true // don't dispose objects given to you
+            ) { AutoFlush = true, NewLine = "\r\n" };
+
             _writer.WriteLine("220 localhost Server Ready");
             var isMessageBody = false;
             while(_socket.Connected)
