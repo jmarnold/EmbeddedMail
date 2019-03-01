@@ -26,7 +26,7 @@ namespace EmbeddedMail.Handlers
         {
             _messageGatherer.AppendLine(token.Data);
 
-            if(token.Data != null && token.Data.Trim() == ".")
+            if(token.Data.Trim() == ".")
             {
                 session.WriteResponse(string.Format("250 Ok: queued as {0}", Guid.NewGuid()));
                 session.SaveMessage(CreateMessage(_messageGatherer, session));
