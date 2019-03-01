@@ -43,7 +43,15 @@ namespace EmbeddedMail
             var isMessageBody = false;
             while(_socket.Connected)
             {
-                var token = SmtpToken.FromLine(_reader.ReadLine(), isMessageBody);
+                var line = _reader.ReadLine();
+                if (line == null) {
+                    /*
+                     * ReadLine returns `null` if the end of the input stream is reached
+                     * https://docs.microsoft.com/en-us/dotnet/api/system.io.streamreader.readline
+                     */
+                    break;
+                }
+                var token = SmtpToken.FromLine(line, isMessageBody);
                 
                 SmtpLog.Debug(token.Data);
 
