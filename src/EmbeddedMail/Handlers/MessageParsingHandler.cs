@@ -24,13 +24,15 @@ namespace EmbeddedMail.Handlers
 
         public ContinueProcessing Handle(SmtpToken token, ISmtpSession session)
         {
-            _messageGatherer.AppendLine(token.Data);
-
             if(token.Data.Trim() == ".")
             {
                 session.WriteResponse(string.Format("250 Ok: queued as {0}", Guid.NewGuid()));
                 session.SaveMessage(CreateMessage(_messageGatherer, session));
                 token.IsMessageBody = false;
+            }
+            else
+            {
+                _messageGatherer.AppendLine(token.Data);
             }
 
             return ContinueProcessing.Continue;
