@@ -1,5 +1,6 @@
 // EDITED BY BLOCHER CONSULTING
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,8 +27,12 @@ namespace EmbeddedMail.Handlers {
       }
 
       if (token.Data == ".") {
-        session.SaveMessage(CreateMessage(_messageGatherer, session));
-        session.WriteResponse(string.Format("250 OK"));
+        try {
+          session.SaveMessage(CreateMessage(_messageGatherer, session));
+        } catch (Exception e) {
+          SmtpLog.Logger.Warning(e, "Exception thrown while trying to save message");
+          session.WriteResponse(string.Format("451 Requested action aborted: error in processing"));
+        }
         token.IsMessageBody = false;
       } else {
         var newLine = token.Data[0] == '.'
