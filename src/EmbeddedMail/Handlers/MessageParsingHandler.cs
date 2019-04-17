@@ -25,13 +25,15 @@ namespace EmbeddedMail.Handlers {
         return ContinueProcessing.ContinueAuth;
       }
 
-      if (token.Data.Trim() == ".") {
-        _messageGatherer.AppendLine(token.Data.Replace(".", "")); // Remove trailing "." from smtp message 
-        session.WriteResponse(string.Format("250 OK"));
+      if (token.Data == ".") {
         session.SaveMessage(CreateMessage(_messageGatherer, session));
+        session.WriteResponse(string.Format("250 OK"));
         token.IsMessageBody = false;
       } else {
-        _messageGatherer.AppendLine(token.Data);
+        var newLine = token.Data[0] == '.'
+          ? token.Data.Substring(1)
+          : token.Data;
+        _messageGatherer.AppendLine(newLine);
       }
 
       return ContinueProcessing.Continue;
