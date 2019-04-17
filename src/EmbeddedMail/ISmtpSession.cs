@@ -28,7 +28,6 @@ namespace EmbeddedMail {
     private readonly ISocket _socket;
     private StreamWriter _writer;
     private StreamReader _reader;
-    private readonly IList<MimeMessage> _messages = new List<MimeMessage>();
     private readonly IList<string> _recipients = new List<string>();
 
     public SmtpSession(ISocket socket, ISmtpAuthorization auth) {
@@ -150,7 +149,6 @@ namespace EmbeddedMail {
     }
 
     public void SaveMessage(MimeMessage message) {
-      _messages.Add(message);
       OnMessage.ForEach(f => f(message, AuthorizationEmailAddresses));
     }
 
