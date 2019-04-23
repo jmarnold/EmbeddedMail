@@ -115,7 +115,12 @@ namespace EmbeddedMail
             {
                 OnMessage = (msg) => _messages.Add(msg)
             };
-            session.Start();
+            
+            try {
+                session.Start();
+            } catch (Exception) {
+                session.WriteResponse("421 localhost error occured");
+            }
 
             _sessions.Add(session);
         }
