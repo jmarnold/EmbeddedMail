@@ -72,7 +72,8 @@ namespace EmbeddedMail
                      * ReadLine returns `null` if the end of the input stream is reached
                      * https://docs.microsoft.com/en-us/dotnet/api/system.io.streamreader.readline
                      */
-                    break;
+                    WriteResponse("421 localhost reached end of input stream while attempting to receive the next line from the client");
+                    return;
                 }
                 var token = SmtpToken.FromLine(line, isMessageBody);
                 
@@ -81,17 +82,17 @@ namespace EmbeddedMail
                 var handler = ProtocolHandlers.HandlerFor(token);
                 if(handler.Handle(token, this) == ContinueProcessing.Stop)
                 {
-                    break;
+                    return;
                 }
 
                 isMessageBody = token.IsData && token.IsMessageBody;
             }
+
+            SmtpLog.Warn("The socket closed unexpectedly");
         }
 
         public void Dispose()
         {
-            WriteResponse("421 localhost Closing transmission channel");
-
             _writer.Close();
             _reader.Close();
         }
